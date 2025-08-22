@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Produit{% endblock %}
+
+{% block body %}
+<body class="g-sidenav-show  bg-gray-100">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                <h6 class="text-white text-capitalize ps-3">Détails de {{ produit.nom }}</h6>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="p-4">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <th>ID</th>
+                      <td>{{ produit.id }}</td>
+                    </tr>
+                    <tr>
+                      <th>Nom</th>
+                      <td>{{ produit.nom }}</td>
+                    </tr>
+                    <tr>
+                      <th>Code</th>
+                      <td>{{ produit.code }}</td>
+                    </tr>
+                    <tr>
+                      <th>Catégorie</th>
+                      <td>{{ produit.categorie }}</td>
+                    </tr>
+                    <tr>
+                      <th>Prix d'achat</th>
+                      <td>{{ produit.prixachat|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                      <th>Prix de vente</th>
+                      <td>{{ produit.prixvente|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                    <tr>
+                      <th>Quantité initiale</th>
+                      <td>{{ produit.quantiteinitiale }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <div class="mt-4">
+                  <a href="{{ path('app_produit_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                  </a>
+                  <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+{% endblock %}
