@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ClientRepository;
+use App\Repository\ClientProRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ClientRepository::class)]
-class Client
+#[ORM\Entity(repositoryClass: ClientProRepository::class)]
+class ClientPro
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,16 +16,16 @@ class Client
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $nomclient = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    private ?string $matriculefiscale = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    private ?string $adresse = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $telephone = null;
+    #[ORM\Column]
+    private ?int $tlfn = null;
 
     /**
      * @var Collection<int, Facture>
@@ -43,50 +43,50 @@ class Client
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getNomclient(): ?string
     {
-        return $this->nom;
+        return $this->nomclient;
     }
 
-    public function setNom(string $nom): static
+    public function setNomclient(string $nomclient): static
     {
-        $this->nom = $nom;
+        $this->nomclient = $nomclient;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getMatriculefiscale(): ?string
     {
-        return $this->prenom;
+        return $this->matriculefiscale;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setMatriculefiscale(string $matriculefiscale): static
     {
-        $this->prenom = $prenom;
+        $this->matriculefiscale = $matriculefiscale;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getAdresse(): ?string
     {
-        return $this->email;
+        return $this->adresse;
     }
 
-    public function setEmail(string $email): static
+    public function setAdresse(string $adresse): static
     {
-        $this->email = $email;
+        $this->adresse = $adresse;
 
         return $this;
     }
 
-    public function getTelephone(): ?string
+    public function getTlfn(): ?int
     {
-        return $this->telephone;
+        return $this->tlfn;
     }
 
-    public function setTelephone(string $telephone): static
+    public function setTlfn(int $tlfn): static
     {
-        $this->telephone = $telephone;
+        $this->tlfn = $tlfn;
 
         return $this;
     }

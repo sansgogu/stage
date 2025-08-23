@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
@@ -14,36 +16,81 @@ class Produit
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $titre = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $soustitre = null;
+
+    #[ORM\Column]
+    private ?float $prix = null;
 
     #[ORM\Column(length: 255)]
     private ?string $code = null;
 
+    #[ORM\ManyToOne(inversedBy: 'produit')]
+    private ?Categorie $categorie = null;
+
+    /**
+     * @var Collection<int, lignefacture>
+     */
+    #[ORM\OneToMany(targetEntity: lignefacture::class, mappedBy: 'produit')]
+    private Collection $lignefacture;
+
+    #[ORM\ManyToOne(inversedBy: 'produit')]
+    private ?Fournisseur $fournisseur = null;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'produit')]
+    private Collection $notifications;
+
     #[ORM\Column(length: 255)]
-    private ?string $categorie = null;
+    private ?string $image = null;
 
-    #[ORM\Column]
-    private ?float $prixachat = null;
-
-    #[ORM\Column]
-    private ?float $prixvente = null;
-
-    #[ORM\Column]
-    private ?int $quantiteinitiale = null;
+    public function __construct()
+    {
+        $this->lignefacture = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getTitre(): ?string
     {
-        return $this->nom;
+        return $this->titre;
     }
 
-    public function setNom(string $nom): static
+    public function setTitre(string $titre): static
     {
-        $this->nom = $nom;
+        $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getSoustitre(): ?string
+    {
+        return $this->soustitre;
+    }
+
+    public function setSoustitre(string $soustitre): static
+    {
+        $this->soustitre = $soustitre;
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): static
+    {
+        $this->prix = $prix;
 
         return $this;
     }
@@ -60,50 +107,98 @@ class Produit
         return $this;
     }
 
-    public function getCategorie(): ?string
+    public function getCategorie(): ?Categorie
     {
         return $this->categorie;
     }
 
-    public function setCategorie(string $categorie): static
+    public function setCategorie(?Categorie $categorie): static
     {
         $this->categorie = $categorie;
 
         return $this;
     }
 
-    public function getPrixachat(): ?float
+    /**
+     * @return Collection<int, lignefacture>
+     */
+    public function getLignefacture(): Collection
     {
-        return $this->prixachat;
+        return $this->lignefacture;
     }
 
-    public function setPrixachat(float $prixachat): static
+    public function addLignefacture(lignefacture $lignefacture): static
     {
-        $this->prixachat = $prixachat;
+        if (!$this->lignefacture->contains($lignefacture)) {
+            $this->lignefacture->add($lignefacture);
+            $lignefacture->setProduit($this);
+        }
 
         return $this;
     }
 
-    public function getPrixvente(): ?float
+    public function removeLignefacture(lignefacture $lignefacture): static
     {
-        return $this->prixvente;
-    }
-
-    public function setPrixvente(float $prixvente): static
-    {
-        $this->prixvente = $prixvente;
+        if ($this->lignefacture->removeElement($lignefacture)) {
+            // set the owning side to null (unless already changed)
+            if ($lignefacture->getProduit() === $this) {
+                $lignefacture->setProduit(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getQuantiteinitiale(): ?int
+    public function getFournisseur(): ?Fournisseur
     {
-        return $this->quantiteinitiale;
+        return $this->fournisseur;
     }
 
-    public function setQuantiteinitiale(int $quantiteinitiale): static
+    public function setFournisseur(?Fournisseur $fournisseur): static
     {
-        $this->quantiteinitiale = $quantiteinitiale;
+        $this->fournisseur = $fournisseur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getProduit() === $this) {
+                $notification->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

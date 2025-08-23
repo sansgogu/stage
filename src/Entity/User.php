@@ -3,45 +3,50 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 255)]
     private ?string $email = null;
-#[ORM\Column(length: 180)]
+
+    #[ORM\Column(length: 255)]
     private ?string $nom = null;
-    #[ORM\Column(length: 180)]
+
+    #[ORM\Column(length: 255)]
     private ?string $prenom = null;
-#[ORM\Column(length: 180)]
+
+    #[ORM\Column(length: 255)]
     private ?string $bio = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $roles = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
-    /**
-     * @var string The hashed password
-     */
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column]
-    private bool $isVerified = false;
+    private ?int $is_verified = null;
+
+    /**
+     * @var Collection<int, facture>
+     */
+    #[ORM\OneToMany(targetEntity: facture::class, mappedBy: 'user')]
+    private Collection $facture;
+
+    public function __construct()
+    {
+        $this->facture = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,41 +65,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
+    public function getNom(): ?string
     {
-        return (string) $this->email;
+        return $this->nom;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
+    public function setNom(string $nom): static
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $this->nom = $nom;
 
-        return array_unique($roles);
+        return $this;
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(string $bio): static
+    {
+        $this->bio = $bio;
+
+        return $this;
+    }
+
+    public function getRoles(): ?string
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(string $roles): static
     {
         $this->roles = $roles;
 
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -107,72 +125,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
+    public function getIsVerified(): ?int
     {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
-        return $data;
+        return $this->is_verified;
     }
 
-    #[\Deprecated]
-    public function eraseCredentials(): void
+    public function setIsVerified(int $is_verified): static
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
+        $this->is_verified = $is_verified;
 
         return $this;
-    }  
-// getter et setter pour nom
-public function getNom(): ?string
-{
-    return $this->nom;
-}
+    }
 
-public function setNom(string $nom): self
-{
-    $this->nom = $nom;
-    return $this;
-}
+    /**
+     * @return Collection<int, facture>
+     */
+    public function getFacture(): Collection
+    {
+        return $this->facture;
+    }
 
-// getter et setter pour prenom
-public function getPrenom(): ?string
-{
-    return $this->prenom;
-}
+    public function addFacture(facture $facture): static
+    {
+        if (!$this->facture->contains($facture)) {
+            $this->facture->add($facture);
+            $facture->setUser($this);
+        }
 
-public function setPrenom(string $prenom): self
-{
-    $this->prenom = $prenom;
-    return $this;
-}
+        return $this;
+    }
 
-// getter et setter pour bio
-public function getBio(): ?string
-{
-    return $this->bio;
-}
+    public function removeFacture(facture $facture): static
+    {
+        if ($this->facture->removeElement($facture)) {
+            // set the owning side to null (unless already changed)
+            if ($facture->getUser() === $this) {
+                $facture->setUser(null);
+            }
+        }
 
-public function setBio(?string $bio): self
-{
-    $this->bio = $bio;
-    return $this;
-}
-
-
-
-
-
+        return $this;
+    }
 }
