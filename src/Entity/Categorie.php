@@ -21,7 +21,7 @@ class Categorie
     /**
      * @var Collection<int, produit>
      */
-    #[ORM\OneToMany(targetEntity: produit::class, mappedBy: 'categorie')]
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'categorie')]
     private Collection $produit;
 
     public function __construct()
@@ -54,7 +54,7 @@ class Categorie
         return $this->produit;
     }
 
-    public function addProduit(produit $produit): static
+    public function addProduit(Produit $produit): static
     {
         if (!$this->produit->contains($produit)) {
             $this->produit->add($produit);
@@ -64,7 +64,7 @@ class Categorie
         return $this;
     }
 
-    public function removeProduit(produit $produit): static
+    public function removeProduit(Produit $produit): static
     {
         if ($this->produit->removeElement($produit)) {
             // set the owning side to null (unless already changed)
@@ -74,5 +74,11 @@ class Categorie
         }
 
         return $this;
+    }
+
+
+    public function __toString()
+    {
+        return  $this->nom ?: 'Categorie'; // Return the name or a default string if it's null
     }
 }

@@ -28,9 +28,9 @@ class Fournisseur
     private ?int $tlfn = null;
 
     /**
-     * @var Collection<int, produit>
+     * @var Collection<int, Produit>
      */
-    #[ORM\OneToMany(targetEntity: produit::class, mappedBy: 'fournisseur')]
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'fournisseur')]
     private Collection $produit;
 
     public function __construct()
@@ -99,7 +99,7 @@ class Fournisseur
         return $this->produit;
     }
 
-    public function addProduit(produit $produit): static
+    public function addProduit(Produit $produit): static
     {
         if (!$this->produit->contains($produit)) {
             $this->produit->add($produit);
@@ -109,7 +109,7 @@ class Fournisseur
         return $this;
     }
 
-    public function removeProduit(produit $produit): static
+    public function removeProduit(Produit $produit): static
     {
         if ($this->produit->removeElement($produit)) {
             // set the owning side to null (unless already changed)
@@ -119,5 +119,9 @@ class Fournisseur
         }
 
         return $this;
+    }
+    public function __toString()
+    {
+        return  $this->nomclient . ' - ' . $this->matriculefiscale . ' - ' . $this->adresse . ' - ' . $this->tlfn;
     }
 }

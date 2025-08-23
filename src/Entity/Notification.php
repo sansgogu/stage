@@ -14,7 +14,7 @@ class Notification
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?produit $produit = null;
+    private ?Facture $produit = null;
 
     public function getId(): ?int
     {

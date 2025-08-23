@@ -1,0 +1,65 @@
+{% extends "baseadmin.html.twig" %}
+ 
+{% block body %}
+    <h1>Categorie</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ categorie.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ categorie.nom }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+
+    <h2>Produits in this category</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Soustitre</th>
+                <th>Prix</th>
+                <th>Code</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for produit in categorie.produit %}
+            <tr>
+                <td>{{ produit.id }}</td>
+                <td>{{ produit.titre }}</td>
+                <td>{{ produit.soustitre }}</td>
+                <td>{{ produit.prix }}</td>
+                <td>{{ produit.code }}</td>
+                <td><img src="{{ asset('image_de_produit/' ~ produit.image) }}" width="70px" height="70px" alt=""></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">No products found in this category.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+
+
+
+
+
+
+
+
+    <a href="{{ path('app_categorie_index') }}">back to list</a>
+
+    <a href="{{ path('app_categorie_edit', {'id': categorie.id}) }}">edit</a>
+
+    {{ include('categorie/_delete_form.html.twig') }}
+{% endblock %}

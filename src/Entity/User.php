@@ -7,9 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,19 +29,20 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $bio = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $roles = null;
+    #[ORM\Column]
+    private array $roles = [];
+
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $is_verified = null;
 
     /**
-     * @var Collection<int, facture>
+     * @var Collection<int, Facture>
      */
-    #[ORM\OneToMany(targetEntity: facture::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Facture::class, mappedBy: 'user')]
     private Collection $facture;
 
     public function __construct()
@@ -101,12 +103,24 @@ class User
         return $this;
     }
 
-    public function getRoles(): ?string
+ 
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        return $this->roles;
-    }
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
 
-    public function setRoles(string $roles): static
+        return array_unique($roles);
+    }
+ 
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
     {
         $this->roles = $roles;
 
@@ -145,7 +159,7 @@ class User
         return $this->facture;
     }
 
-    public function addFacture(facture $facture): static
+    public function addFacture(Facture $facture): static
     {
         if (!$this->facture->contains($facture)) {
             $this->facture->add($facture);
@@ -155,7 +169,7 @@ class User
         return $this;
     }
 
-    public function removeFacture(facture $facture): static
+    public function removeFacture(Facture $facture): static
     {
         if ($this->facture->removeElement($facture)) {
             // set the owning side to null (unless already changed)
@@ -166,4 +180,7 @@ class User
 
         return $this;
     }
+
+
+
 }

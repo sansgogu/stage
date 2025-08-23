@@ -29,7 +29,7 @@ class Lignefacture
     private ?float $prixtotale = null;
 
     #[ORM\ManyToOne(inversedBy: 'lignefactures')]
-    private ?facture $facture = null;
+    private ?Facture $facture = null;
 
     #[ORM\ManyToOne(inversedBy: 'lignefacture')]
     private ?Produit $produit = null;
@@ -99,12 +99,12 @@ class Lignefacture
         return $this;
     }
 
-    public function getFacture(): ?facture
+    public function getFacture(): ?Facture
     {
         return $this->facture;
     }
 
-    public function setFacture(?facture $facture): static
+    public function setFacture(?Facture $facture): static
     {
         $this->facture = $facture;
 

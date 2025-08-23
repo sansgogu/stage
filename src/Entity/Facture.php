@@ -19,7 +19,7 @@ class Facture
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'factures')]
-    private ?clientpro $client = null;
+    private ?ClientPro $client = null;
 
     #[ORM\Column]
     private ?float $total = null;
@@ -61,12 +61,12 @@ class Facture
         return $this;
     }
 
-    public function getClient(): ?clientpro
+    public function getClient(): ?ClientPro
     {
         return $this->client;
     }
 
-    public function setClient(?clientpro $client): static
+    public function setClient(?ClientPro $client): static
     {
         $this->client = $client;
 

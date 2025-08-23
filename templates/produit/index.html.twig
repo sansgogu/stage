@@ -1,439 +1,369 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Soft UI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+  <style>
         :root {
-            --primary: #5e72e4;
-            --secondary: #8392ab;
-            --success: #2dce89;
-            --info: #11cdef;
-            --warning: #fb6340;
-            --danger: #f5365c;
-            --dark: #344767;
-            --light: #f8f9fa;
-            --sidebar-bg: linear-gradient(195deg, #42424a 0%, #191919 100%);
-            --card-bg: #ffffff;
-            --soft-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-            --border-radius: 12px;
-            --transition: all 0.15s ease;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --sidebar-width: 250px;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
+        
         body {
-            background-color: #f0f2f5;
-            color: var(--dark);
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+        }
+        
+        .admin-container {
             display: flex;
             min-height: 100vh;
-            justify-content: center;
-            align-items: center;
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            color: white;
+            position: fixed;
+            height: 100vh;
+            padding-top: 20px;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+        }
+        
+        .sidebar-brand {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-brand h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 3px solid white;
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
             padding: 20px;
         }
-
-        .auth-container {
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .auth-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            box-shadow: var(--soft-shadow);
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .auth-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 14px 26px rgba(50, 50, 93, 0.16), 0 4px 6px rgba(0, 0, 0, 0.08);
-        }
-
-        .auth-logo {
-            margin-bottom: 30px;
-        }
-
-        .auth-logo h2 {
-            font-weight: 700;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--dark);
-            margin-bottom: 10px;
-        }
-
-        .auth-logo i {
-            margin-right: 10px;
-            background: linear-gradient(195deg, #49a3f1 0%, #1A73E8 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .auth-logo p {
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--secondary);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .auth-tab.active {
-            color: var(--primary);
-        }
-
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 3px 3px 0 0;
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            box-shadow: var(--soft-shadow);
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
-        }
-
-        .form-actions {
+        
+        /* Header */
+        .admin-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
         }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
-
-        .remember-me input {
-            margin-right: 8px;
-        }
-
-        .forgot-password {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .btn-auth {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: var(--transition);
-            box-shadow: var(--soft-shadow);
-            margin-bottom: 20px;
-        }
-
-        .btn-auth:hover {
-            background: #4a5bd5;
-            transform: translateY(-2px);
-        }
-
-        .auth-footer {
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .auth-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
-
-        .social-login {
-            margin: 20px 0;
-        }
-
-        .social-login p {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
+        
+        .search-bar {
             position: relative;
+            width: 300px;
         }
-
-        .social-login p::before,
-        .social-login p::after {
-            content: '';
+        
+        .search-bar input {
+            border-radius: 50px;
+            padding-left: 45px;
+            background-color: var(--light-bg);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .search-bar i {
             position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: #e9ecef;
+            left: 15px;
+            top: 10px;
+            color: #718096;
         }
-
-        .social-login p::before {
-            left: 0;
-        }
-
-        .social-login p::after {
-            right: 0;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .social-icon {
+        
+        .user-profile img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-card {
+            text-align: center;
+        }
+        
+        .stats-card .number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .stats-card .label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        .stats-card .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto;
+            font-size: 1.8rem;
+        }
+        
+        /* Table Styling */
+        .product-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background-color: var(--primary);
             color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--soft-shadow);
+            border: none;
+            padding: 15px 20px;
+            font-weight: 500;
         }
-
-        .social-icon:hover {
-            transform: translateY(-3px);
+        
+        .table tbody td {
+            padding: 15px 20px;
+            vertical-align: middle;
+            border-color: #edf2f7;
         }
-
-        .facebook {
-            background: #3b5998;
+        
+        .table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
         }
-
-        .twitter {
-            background: #1DA1F2;
+        
+        .product-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
         }
-
-        .google {
-            background: #DB4437;
+        
+        .badge-success {
+            background-color: #48bb78;
+            color: white;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        
+        .btn-action {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        
+        /* Pagination */
+        .pagination .page-link {
+            color: var(--primary);
+            border-radius: 8px;
+            margin: 0 3px;
+            border: none;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar-brand h2, .sidebar-menu span {
+                display: none;
+            }
+            
+            .sidebar-menu i {
+                margin-right: 0;
+                font-size: 1.4rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
+            .search-bar {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-logo">
-                <h2><i class="fas fa-chart-pie"></i> Soft UI</h2>
-                <p>Tableau de bord d'administration</p>
+ 
+       
+
+            <!-- Products Table -->
+            <div class="dashboard-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h5 mb-0">Product List</h2>
+                    <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Product
+                    </a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover product-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Code</th>
+                                <th>Supplier</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produit in produits %}
+                            <tr>
+                                <td class="fw-medium">#{{ produit.id }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{asset('image_de_produit/' ~ produit.image)}}" class="product-img me-3" alt="{{ produit.titre }}">
+                                        <div>
+                                            <div class="fw-medium">{{ produit.titre }}</div>
+                                            <small class="text-muted">{{ produit.soustitre }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="fw-medium">${{ produit.prix }}</td>
+                                <td>{{ produit.code }}</td>
+                                <td>{{ produit.fournisseur }}</td>
+                                <td>
+                                    <a href="/categorie/{{ produit.categorie.id }}" class="badge bg-light text-dark text-decoration-none">
+                                        {{ produit.categorie }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">In Stock</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-outline-primary action-btn me-2" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-outline-secondary action-btn" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <i class="bi bi-inbox display-4 d-block text-muted mb-2"></i>
+                                    <span class="text-muted">No products found</span>
+                                    <div class="mt-3">
+                                        <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
+                                            <i class="bi bi-plus-circle me-2"></i>Add Your First Product
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+               
             </div>
-
-            <div class="auth-tabs">
-                <div class="auth-tab active" data-tab="signin">Connexion</div>
-                <div class="auth-tab" data-tab="signup">Inscription</div>
-            </div>
-
-            <!-- Sign In Form -->
-            <form id="signinForm" class="auth-form active">
-                <div class="form-group">
-                    <label for="signinEmail">Adresse email</label>
-                    <input type="email" id="signinEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="signinPassword">Mot de passe</label>
-                    <input type="password" id="signinPassword" required>
-                </div>
-                <div class="form-actions">
-                    <div class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        <label for="rememberMe">Se souvenir de moi</label>
-                    </div>
-                    <a href="#" class="forgot-password">Mot de passe oublié?</a>
-                </div>
-                <button type="submit" class="btn-auth">Se connecter</button>
-
-                <div class="social-login">
-                    <p>Ou connectez-vous avec</p>
-                    <div class="social-icons">
-                        <div class="social-icon facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </div>
-                        <div class="social-icon twitter">
-                            <i class="fab fa-twitter"></i>
-                        </div>
-                        <div class="social-icon google">
-                            <i class="fab fa-google"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="auth-footer">
-                    Vous n'avez pas de compte? <a href="#" id="showSignup">S'inscrire</a>
-                </div>
-            </form>
-
-            <!-- Sign Up Form -->
-            <form id="signupForm" class="auth-form">
-                <div class="form-group">
-                    <label for="signupName">Nom complet</label>
-                    <input type="text" id="signupName" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Adresse email</label>
-                    <input type="email" id="signupEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Mot de passe</label>
-                    <input type="password" id="signupPassword" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupConfirmPassword">Confirmer le mot de passe</label>
-                    <input type="password" id="signupConfirmPassword" required>
-                </div>
-                <button type="submit" class="btn-auth">S'inscrire</button>
-
-                <div class="auth-footer">
-                    Vous avez déjà un compte? <a href="#" id="showSignin">Se connecter</a>
-                </div>
-            </form>
         </div>
     </div>
 
-    <script>
-        // Switch between Sign In and Sign Up forms
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Update active tab
-                document.querySelectorAll('.auth-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Show corresponding form
-                const tabId = this.getAttribute('data-tab');
-                document.querySelectorAll('.auth-form').forEach(form => {
-                    form.classList.remove('active');
-                });
-                document.getElementById(`${tabId}Form`).classList.add('active');
-            });
-        });
-
-        // Links to switch forms
-        document.getElementById('showSignup').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('.auth-tab[data-tab="signup"]').click();
-        });
-
-        document.getElementById('showSignin').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector('.auth-tab[data-tab="signin"]').click();
-        });
-
-        // Form submission
-        document.getElementById('signinForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('signinEmail').value;
-            const password = document.getElementById('signinPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Here you would typically validate and send to server
-            console.log('Sign In Attempt:', { email, password, rememberMe });
-            
-            // For demo purposes, redirect to dashboard
-            window.location.href = 'dashboard.html';
-        });
-
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('signupConfirmPassword').value;
-            
-            // Basic validation
-            if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas!');
-                return;
-            }
-            
-            // Here you would typically validate and send to server
-            console.log('Sign Up Attempt:', { name, email, password });
-            
-            // For demo purposes, switch to sign in after "registration"
-            alert('Inscription réussie! Vous pouvez maintenant vous connecter.');
-            document.querySelector('.auth-tab[data-tab="signin"]').click();
-        });
-
-        // Social login handlers
-        document.querySelectorAll('.social-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                const platform = this.classList.contains('facebook') ? 'Facebook' : 
-                               this.classList.contains('twitter') ? 'Twitter' : 'Google';
-                alert(`Connexion avec ${platform} serait implémentée ici`);
-            });
-        });
-    </script>
-</body>
-</html>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+{% endblock %}

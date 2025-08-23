@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
@@ -33,7 +34,7 @@ class Produit
     /**
      * @var Collection<int, lignefacture>
      */
-    #[ORM\OneToMany(targetEntity: lignefacture::class, mappedBy: 'produit')]
+    #[ORM\OneToMany(targetEntity: Lignefacture::class, mappedBy: 'produit')]
     private Collection $lignefacture;
 
     #[ORM\ManyToOne(inversedBy: 'produit')]
@@ -47,6 +48,9 @@ class Produit
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdat = null;
 
     public function __construct()
     {
@@ -127,7 +131,7 @@ class Produit
         return $this->lignefacture;
     }
 
-    public function addLignefacture(lignefacture $lignefacture): static
+    public function addLignefacture(Lignefacture $lignefacture): static
     {
         if (!$this->lignefacture->contains($lignefacture)) {
             $this->lignefacture->add($lignefacture);
@@ -137,7 +141,7 @@ class Produit
         return $this;
     }
 
-    public function removeLignefacture(lignefacture $lignefacture): static
+    public function removeLignefacture(Lignefacture $lignefacture): static
     {
         if ($this->lignefacture->removeElement($lignefacture)) {
             // set the owning side to null (unless already changed)
@@ -199,6 +203,18 @@ class Produit
     public function setImage(string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCreatedat(): ?\DateTimeImmutable
+    {
+        return $this->createdat;
+    }
+
+    public function setCreatedat(\DateTimeImmutable $createdat): static
+    {
+        $this->createdat = $createdat;
 
         return $this;
     }
