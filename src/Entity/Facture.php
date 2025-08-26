@@ -5,43 +5,29 @@ namespace App\Entity;
 use App\Repository\FactureRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=FactureRepository::class)
- */
+#[ORM\Entity(repositoryClass: FactureRepository::class)]
 class Facture
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $reference;
+    #[ORM\Column(type: "string", length: 255)]
+    private ?string $reference = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date;
+    #[ORM\Column(type: "datetime")]
+    private ?\DateTimeInterface $date = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $quantite;
+    #[ORM\Column(type: "integer")]
+    private ?int $quantite = null;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private $total;
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
+    private ?string $total = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Produit::class, inversedBy="factures")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $produit;
+    #[ORM\ManyToOne(targetEntity: Produit::class, inversedBy: "factures")]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Produit $produit = null;
 
     public function getId(): ?int
     {
@@ -56,7 +42,6 @@ class Facture
     public function setReference(string $reference): self
     {
         $this->reference = $reference;
-
         return $this;
     }
 
@@ -68,7 +53,6 @@ class Facture
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -80,7 +64,6 @@ class Facture
     public function setQuantite(int $quantite): self
     {
         $this->quantite = $quantite;
-
         return $this;
     }
 
@@ -92,7 +75,6 @@ class Facture
     public function setTotal(string $total): self
     {
         $this->total = $total;
-
         return $this;
     }
 
@@ -104,7 +86,6 @@ class Facture
     public function setProduit(?Produit $produit): self
     {
         $this->produit = $produit;
-
         return $this;
     }
 }

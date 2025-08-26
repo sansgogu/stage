@@ -16,21 +16,39 @@ class Produit1Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre')
-            ->add('soustitre')
-            ->add('prix')
-            ->add('code')
-            ->add('image' , FileType::class, [
+            ->add('titre', null, [
+                'attr' => ['class' => 'form-control mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
+            ->add('soustitre', null, [
+                'attr' => ['class' => 'form-control mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
+            ->add('prix', null, [
+                'attr' => ['class' => 'form-control mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
+            ->add('code', null, [
+                'attr' => ['class' => 'form-control mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
+            ->add('image', FileType::class, [
                 'label' => 'Image (JPG file)',
                 'mapped' => false,
                 'required' => false,
+                'attr' => ['class' => 'form-control mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
             ])
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
-             ])
+                'attr' => ['class' => 'form-select mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
             ->add('fournisseur', EntityType::class, [
                 'class' => Fournisseur::class,
-             ])
+                'attr' => ['class' => 'form-select mb-3'],
+                'label_attr' => ['class' => 'form-label fw-bold'],
+            ])
         ;
     }
 

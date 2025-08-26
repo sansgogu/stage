@@ -14,7 +14,7 @@
 
       {# Dashboard #}
       <li class="nav-item">
-        <a class="nav-link active" href="{{ path('app_dashboard') }}">
+        <a class="nav-link  {% if app.request.attributes.get('_route') == 'app_dashboard' %}active{% endif %}" href="{{ path('app_dashboard') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="fas fa-home text-primary"></i>
           </div>
@@ -24,8 +24,8 @@
 
       {# Tables #}
       <li class="nav-item">
-        <a class="nav-link" href="/categorie">
-          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+        <a class="nav-link  {% if app.request.attributes.get('_route') == 'app_categorie_index' %}active{% endif %}" href="/categorie">
+          <div class="icon  icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="fas fa-table text-warning"></i>
           </div>
           <span class="nav-link-text ms-1">Gestion Categories</span>
@@ -33,18 +33,19 @@
       </li>
 
       {# Billing #}
-      <li class="nav-item">
-        <a class="nav-link" href="/produit">
-          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+    <li class="nav-item">
+    <a class="nav-link {% if app.request.attributes.get('_route') == 'app_produit_index' %}active{% endif %}" href="{{ path('app_produit_index') }}">
+        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="fas fa-credit-card text-success"></i>
-          </div>
-          <span class="nav-link-text ms-1">Gestion Produit</span>
-        </a>
-      </li>
+        </div>
+        <span class="nav-link-text ms-1">Gestion Produit</span>
+    </a>
+</li>
+
 
       {# Virtual Reality #}
       <li class="nav-item">
-        <a class="nav-link" href="/fournisseur">
+        <a class="nav-link  {% if app.request.attributes.get('_route') == 'app_fournisseur_index' %}active{% endif %}" href="/fournisseur">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i class="fas fa-vr-cardboard text-info"></i>
           </div>

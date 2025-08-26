@@ -39,17 +39,9 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $is_verified = null;
 
-    /**
-     * @var Collection<int, Facture>
-     */
-    #[ORM\OneToMany(targetEntity: Facture::class, mappedBy: 'user')]
-    private Collection $facture;
+ 
 
-    public function __construct()
-    {
-        $this->facture = new ArrayCollection();
-    }
-
+ 
     public function getId(): ?int
     {
         return $this->id;
@@ -150,36 +142,7 @@ class User implements PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, facture>
-     */
-    public function getFacture(): Collection
-    {
-        return $this->facture;
-    }
-
-    public function addFacture(Facture $facture): static
-    {
-        if (!$this->facture->contains($facture)) {
-            $this->facture->add($facture);
-            $facture->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFacture(Facture $facture): static
-    {
-        if ($this->facture->removeElement($facture)) {
-            // set the owning side to null (unless already changed)
-            if ($facture->getUser() === $this) {
-                $facture->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+ 
 
 
 
