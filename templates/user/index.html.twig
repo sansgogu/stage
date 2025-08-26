@@ -1,0 +1,581 @@
+
+{% extends "baseadmin.html.twig" %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Admin Panel</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(120deg, var(--primary), var(--secondary));
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+        }
+        
+        .page-header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px 12px 0 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .stats-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .stats-card .label {
+            color: #718096;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stats-card .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 1.8rem;
+        }
+        
+        .bg-primary-light {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .bg-success-light {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .bg-warning-light {
+            background-color: rgba(255, 209, 102, 0.1);
+            color: var(--warning);
+        }
+        
+        .bg-info-light {
+            background-color: rgba(106, 176, 230, 0.1);
+            color: #6ab0e6;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            background: linear-gradient(to right, rgba(67, 97, 238, 0.05), rgba(63, 55, 201, 0.05));
+            color: var(--primary);
+            padding: 1rem;
+        }
+        
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+        
+        .table tbody tr {
+            transition: all 0.3s;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .badge-primary {
+            background: var(--gradient);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .search-bar {
+            position: relative;
+            max-width: 300px;
+        }
+        
+        .search-bar input {
+            border-radius: 50px;
+            padding-left: 45px;
+            background-color: var(--light-bg);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .search-bar input:focus {
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 10px;
+            color: #718096;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+        
+        .pagination {
+            margin: 0;
+        }
+        
+        .page-item.active .page-link {
+            background: var(--gradient);
+            border-color: var(--primary);
+        }
+        
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: var(--gradient);
+            color: white;
+            margin-right: 15px;
+        }
+        
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+            border-radius: 0.35rem;
+        }
+        
+        .verified-badge {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--success);
+        }
+        
+        .unverified-badge {
+            background-color: rgba(255, 209, 102, 0.2);
+            color: var(--warning);
+        }
+        
+        .password-field {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-card .number {
+                font-size: 1.8rem;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-bar {
+                margin-top: 1rem;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="page-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0"><i class="bi bi-people-fill me-2"></i>User Management</h1>
+                    <p class="mb-0 opacity-75">Manage system users and permissions</p>
+                </div>
+                <a href="{{ path('app_user_new') }}" class="btn btn-light">
+                    <i class="bi bi-plus-circle me-2"></i> Create New User
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Stats Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="icon bg-primary-light">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="number">{{ users is iterable ? users|length : 0 }}</div>
+                    <div class="label">Total Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="icon bg-success-light">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="number">
+                        {% set verified_count = 0 %}
+                        {% for user in users %}
+                            {% if user.isVerified %}
+                                {% set verified_count = verified_count + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ verified_count }}
+                    </div>
+                    <div class="label">Verified Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="icon bg-warning-light">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <div class="number">
+                        {% set admin_count = 0 %}
+                        {% for user in users %}
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                                {% set admin_count = admin_count + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ admin_count }}
+                    </div>
+                    <div class="label">Admin Users</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="icon bg-info-light">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="number">
+                        {% set unverified_count = 0 %}
+                        {% for user in users %}
+                            {% if not user.isVerified %}
+                                {% set unverified_count = unverified_count + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ unverified_count }}
+                    </div>
+                    <div class="label">Unverified Users</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <i class="bi bi-search me-2"></i> Search and Filters
+                </div>
+            </div>
+            <div class="card-body">
+                <form method="get" action="{{ path('app_user_index') }}">
+                    <div class="row">
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <div class="search-bar">
+                                <i class="bi bi-search"></i>
+                                <input type="text" name="search" class="form-control" placeholder="Search by name, email..." value="{{ app.request.query.get('search') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex">
+                                <select class="form-select me-2" name="filter">
+                                    <option value="">All Users</option>
+                                    <option value="verified" {{ app.request.query.get('filter') == 'verified' ? 'selected' : '' }}>Verified Only</option>
+                                    <option value="unverified" {{ app.request.query.get('filter') == 'unverified' ? 'selected' : '' }}>Unverified Only</option>
+                                    <option value="admin" {{ app.request.query.get('filter') == 'admin' ? 'selected' : '' }}>Admins Only</option>
+                                </select>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-filter me-1"></i> Apply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Users Table Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <i class="bi bi-table me-2"></i> Users List
+                    <span class="badge-primary ms-2">{{ users is iterable ? users|length : 0 }}</span>
+                </div>
+                <div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="compactView">
+                        <label class="form-check-label" for="compactView">Compact view</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if users is defined and users is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Bio</th>
+                                    <th>Roles</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td class="fw-medium">#{{ user.id }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-icon">
+                                                {{ user.prenom|first|upper }}{{ user.nom|first|upper }}
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold">{{ user.prenom }} {{ user.nom }}</div>
+                                                <small class="text-muted">Joined {{ "now"|date("M Y") }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.bio %}
+                                            <span class="d-inline-block text-truncate" style="max-width: 150px;" title="{{ user.bio }}">
+                                                {{ user.bio }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">No bio</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% for role in user.roles %}
+                                            {% if role == 'ROLE_ADMIN' %}
+                                                <span class="badge bg-primary role-badge">Admin</span>
+                                            {% elseif role == 'ROLE_USER' %}
+                                                <span class="badge bg-secondary role-badge">User</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-dark role-badge">{{ role }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% if user.isVerified %}
+                                            <span class="badge verified-badge">Verified</span>
+                                        {% else %}
+                                            <span class="badge unverified-badge">Unverified</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-sm btn-outline-primary action-btn me-2" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-outline-secondary action-btn me-2" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-info action-btn" title="View Password" data-bs-toggle="tooltip" data-bs-title="Password is encrypted for security">
+                                                <i class="bi bi-key"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center p-3">
+                        <div class="text-muted">
+                            Showing <strong>1</strong> to <strong>{{ users is iterable ? users|length : 0 }}</strong> 
+                            of <strong>{{ users is iterable ? users|length : 0 }}</strong> users
+                        </div>
+                        <nav>
+                            <ul class="pagination mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-people"></i>
+                        <h4>No users found</h4>
+                        <p class="text-muted">Get started by creating your first user</p>
+                        <a href="{{ path('app_user_new') }}" class="btn btn-primary mt-3">
+                            <i class="bi bi-plus-circle me-2"></i> Create New User
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        // Initialize DataTable
+        $(document).ready(function() {
+            $('#usersTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search users...",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "Showing 0 to 0 of 0 entries",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                }
+            });
+        });
+        
+        // Initialize tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        
+        // Compact view toggle
+        document.getElementById('compactView').addEventListener('change', function() {
+            const table = document.getElementById('usersTable');
+            if (this.checked) {
+                table.classList.add('table-sm');
+            } else {
+                table.classList.remove('table-sm');
+            }
+        });
+        
+        // Add subtle animation to cards on page load
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 + (index * 100));
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,369 +1,145 @@
 {% extends "baseadmin.html.twig" %}
 
 {% block body %}
-  <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --light-bg: #f8f9fa;
-            --dark-bg: #212529;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --sidebar-width: 250px;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f7fb;
-            color: #333;
-        }
-        
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        
-        /* Sidebar Styling */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            color: white;
-            position: fixed;
-            height: 100vh;
-            padding-top: 20px;
-            box-shadow: var(--card-shadow);
-            z-index: 1000;
-        }
-        
-        .sidebar-brand {
-            padding: 0 20px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 20px;
-        }
-        
-        .sidebar-brand h2 {
-            font-weight: 600;
-            font-size: 1.5rem;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .sidebar-menu li {
-            margin-bottom: 5px;
-        }
-        
-        .sidebar-menu a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            display: block;
-            padding: 12px 20px;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-        
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-left: 3px solid white;
-        }
-        
-        .sidebar-menu i {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 20px;
-        }
-        
-        /* Header */
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
-        }
-        
-        .search-bar {
-            position: relative;
-            width: 300px;
-        }
-        
-        .search-bar input {
-            border-radius: 50px;
-            padding-left: 45px;
-            background-color: var(--light-bg);
-            border: 1px solid #e2e8f0;
-        }
-        
-        .search-bar i {
-            position: absolute;
-            left: 15px;
-            top: 10px;
-            color: #718096;
-        }
-        
-        .user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-        
-        /* Dashboard Cards */
-        .dashboard-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            padding: 20px;
-            margin-bottom: 25px;
-            transition: transform 0.3s;
-        }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stats-card {
-            text-align: center;
-        }
-        
-        .stats-card .number {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin: 10px 0;
-        }
-        
-        .stats-card .label {
-            color: #718096;
-            font-size: 0.9rem;
-        }
-        
-        .stats-card .icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            font-size: 1.8rem;
-        }
-        
-        /* Table Styling */
-        .product-table {
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-        }
-        
-        .table thead th {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            font-weight: 500;
-        }
-        
-        .table tbody td {
-            padding: 15px 20px;
-            vertical-align: middle;
-            border-color: #edf2f7;
-        }
-        
-        .table tbody tr:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-        
-        .product-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        
-        .badge-success {
-            background-color: #48bb78;
-            color: white;
-        }
-        
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 5px;
-        }
-        
-        /* Buttons */
-        .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-weight: 500;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
-        }
-        
-        .btn-action {
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
-        
-        /* Pagination */
-        .pagination .page-link {
-            color: var(--primary);
-            border-radius: 8px;
-            margin: 0 3px;
-            border: none;
-        }
-        
-        .pagination .page-item.active .page-link {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 70px;
-                overflow: hidden;
-            }
-            
-            .sidebar-brand h2, .sidebar-menu span {
-                display: none;
-            }
-            
-            .sidebar-menu i {
-                margin-right: 0;
-                font-size: 1.4rem;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-            
-            .search-bar {
-                width: 200px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-        }
-    </style>
-</head>
-<body>
- 
-       
+<style>
+    :root {
+        --primary: #4361ee;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --light-bg: #f8f9fa;
+        --dark-bg: #212529;
+        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --sidebar-width: 250px;
+    }
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f5f7fb;
+        color: #333;
+    }
+    
+    .admin-container {
+        display: flex;
+        min-height: 100vh;
+    }
 
-            <!-- Products Table -->
-            <div class="dashboard-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="h5 mb-0">Product List</h2>
-                    <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Add New Product
-                    </a>
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-hover product-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Code</th>
-                                <th>Supplier</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for produit in produits %}
-                            <tr>
-                                <td class="fw-medium">#{{ produit.id }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="{{asset('image_de_produit/' ~ produit.image)}}" class="product-img me-3" alt="{{ produit.titre }}">
-                                        <div>
-                                            <div class="fw-medium">{{ produit.titre }}</div>
-                                            <small class="text-muted">{{ produit.soustitre }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="fw-medium">${{ produit.prix }}</td>
-                                <td>{{ produit.code }}</td>
-                                <td>{{ produit.fournisseur }}</td>
-                                <td>
-                                    <a href="/categorie/{{ produit.categorie.id }}" class="badge bg-light text-dark text-decoration-none">
-                                        {{ produit.categorie }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <span class="badge bg-success">In Stock</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-outline-primary action-btn me-2" title="View">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-outline-secondary action-btn" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="8" class="text-center py-4">
-                                    <i class="bi bi-inbox display-4 d-block text-muted mb-2"></i>
-                                    <span class="text-muted">No products found</span>
-                                    <div class="mt-3">
-                                        <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
-                                            <i class="bi bi-plus-circle me-2"></i>Add Your First Product
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                
-               
-            </div>
-        </div>
+    /* --- Styles simplifiés pour la table et cards --- */
+    .dashboard-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    .product-table thead th {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 15px 20px;
+    }
+    .product-table tbody td {
+        padding: 15px 20px;
+        vertical-align: middle;
+    }
+    .product-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+    }
+</style>
+
+<div class="dashboard-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h5 mb-0">Product List</h2>
+        <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Add New Product
+        </a>
     </div>
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- 
+    <div class="table-responsive">
+        <table class="table table-hover product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Code</th>
+                    <th>Supplier</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produit in produits %}
+                <tr>
+                    <td>#{{ produit.id }}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('image_de_produit/' ~ produit.image) }}" 
+                                 class="product-img me-3" alt="{{ produit.titre }}">
+                            <div>
+                                <div class="fw-medium">{{ produit.titre }}</div>
+                                <small class="text-muted">{{ produit.soustitre }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${{ produit.prix }}</td>
+                    <td>{{ produit.code }}</td>
+                    <td>{{ produit.fournisseur }}</td>
+                    <td>
+                        {% if produit.categorie %}
+                            <a href="{{ path('app_categorie_show', {'id': produit.categorie.id}) }}" 
+                               class="badge bg-light text-dark text-decoration-none">
+                                {{ produit.categorie }}
+                            </a>
+                        {% else %}
+                            <span class="badge bg-secondary">No Category</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-success">In Stock</span>
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a href="{{ path('app_produit_show', {'id': produit.id}) }}" 
+                               class="btn btn-sm btn-outline-primary action-btn me-2" title="View">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" 
+                               class="btn btn-sm btn-outline-secondary action-btn" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">
+                        <i class="bi bi-inbox display-4 d-block text-muted mb-2"></i>
+                        <span class="text-muted">No products found</span>
+                        <div class="mt-3">
+                            <a href="{{ path('app_produit_new') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Add Your First Product
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

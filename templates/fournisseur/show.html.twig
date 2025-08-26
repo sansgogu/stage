@@ -1,0 +1,140 @@
+{% extends "baseadmin.html.twig" %}
+
+{% block body %}
+   {% extends "baseadmin.html.twig" %}
+
+{% block body %}
+<div class="page-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="h3 mb-0"><i class="bi bi-people-fill me-2"></i>Fournisseur Details</h1>
+            <a href="{{ path('app_fournisseur_index') }}" class="back-link">
+                <i class="bi bi-arrow-left me-2"></i> Back to list
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <!-- Fournisseur Information Card -->
+    <div class="card detail-card">
+        <div class="card-header d-flex align-items-center">
+            <i class="bi bi-info-circle me-2"></i> Fournisseur Information
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="info-icon">
+                            <i class="bi bi-key"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">ID</h6>
+                            <p class="mb-0 fw-bold">{{ fournisseur.id }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="info-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">Nom du client</h6>
+                            <p class="mb-0 fw-bold">{{ fournisseur.nomclient }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="info-icon">
+                            <i class="bi bi-card-text"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">Matricule Fiscale</h6>
+                            <p class="mb-0 fw-bold">{{ fournisseur.matriculefiscale }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="info-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">Adresse</h6>
+                            <p class="mb-0 fw-bold">{{ fournisseur.adresse }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="info-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 text-muted">Téléphone</h6>
+                            <p class="mb-0 fw-bold">{{ fournisseur.tlfn }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex mt-4">
+                <a href="{{ path('app_fournisseur_edit', {'id': fournisseur.id}) }}" class="btn btn-primary me-2">
+                    <i class="bi bi-pencil me-2"></i> Edit Fournisseur
+                </a>
+                {{ include('fournisseur/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Produits du Fournisseur -->
+    <div class="card mt-4">
+        <div class="card-header d-flex align-items-center">
+            <i class="bi bi-grid me-2"></i> Produits liés
+            <span class="badge bg-primary ms-2">{{ fournisseur.produit|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            {% if fournisseur.produit|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre</th>
+                            <th>Sous-titre</th>
+                            <th>Prix</th>
+                            <th>Code</th>
+                            <th>Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produit in fournisseur.produit %}
+                        <tr>
+                            <td>{{ produit.id }}</td>
+                            <td class="fw-bold">{{ produit.titre }}</td>
+                            <td>{{ produit.soustitre }}</td>
+                            <td>${{ produit.prix }}</td>
+                            <td>{{ produit.code }}</td>
+                            <td>
+                                <img src="{{ asset('image_de_produit/' ~ produit.image) }}" class="product-img" alt="{{ produit.titre }}">
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h4>Aucun produit trouvé</h4>
+                <p class="text-muted">Ce fournisseur n'a aucun produit pour le moment.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

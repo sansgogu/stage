@@ -1,0 +1,341 @@
+
+
+
+
+{% block body %}
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClientPro Details</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #6f42c1;
+            --light-bg: #f8f9fc;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .detail-card {
+            transition: transform 0.3s;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #4e73df;
+            width: 200px;
+        }
+        
+        .client-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .client-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-right: 1.5rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .client-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .client-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .info-value {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="h3 fw-bold"><i class="bi bi-person-badge me-2"></i>Client Details</h1>
+                    <p class="mb-0">View complete information for {{ client_pro.nomclient }}</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{{ path('app_client_pro_index') }}" class="btn btn-light">
+                        <i class="bi bi-arrow-left me-2"></i>Back to list
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Header -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="client-header">
+                    <div class="client-avatar">
+                        {{ client_pro.nomclient|first|upper }}
+                    </div>
+                    <div class="client-info">
+                        <h2 class="h4 mb-1">{{ client_pro.nomclient }}</h2>
+                        <p class="text-muted mb-0">Client ID: #{{ client_pro.id }}</p>
+                        <span class="badge bg-success mt-2">Active Client</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Client Details -->
+            <div class="col-lg-8">
+                <div class="card detail-card mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-info-circle me-2"></i>Client Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-3 info-label">Client ID</div>
+                            <div class="col-sm-9 info-value">
+                                <span class="badge bg-primary">#{{ client_pro.id }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3 info-label">Client Name</div>
+                            <div class="col-sm-9 info-value">{{ client_pro.nomclient }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3 info-label">Tax ID</div>
+                            <div class="col-sm-9 info-value">{{ client_pro.matriculefiscale }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3 info-label">Address</div>
+                            <div class="col-sm-9 info-value">{{ client_pro.adresse }}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3 info-label">Phone Number</div>
+                            <div class="col-sm-9 info-value">
+                                <i class="bi bi-telephone me-2"></i>{{ client_pro.tlfn }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info & Actions -->
+            <div class="col-lg-4">
+                <!-- Status Card -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-activity me-2"></i>Client Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Account Status</h6>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Since</h6>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="text-muted">Jan 15, 2023</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">Last Updated</h6>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="text-muted">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_client_pro_edit', {'id': client_pro.id}) }}" class="btn btn-primary">
+                                <i class="bi bi-pencil me-2"></i>Edit Client
+                            </a>
+                            <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="bi bi-trash me-2"></i>Delete Client
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-clock-history me-2"></i>Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded">
+                                        <i class="bi bi-pencil text-primary"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Client information updated</h6>
+                                        <small class="text-muted">2 days ago</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Contact details were modified</p>
+                                </div>
+                            </div>
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-success bg-opacity-10 p-2 rounded">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">New contract signed</h6>
+                                        <small class="text-muted">1 week ago</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Premium service package activated</p>
+                                </div>
+                            </div>
+                            <div class="list-group-item d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-info bg-opacity-10 p-2 rounded">
+                                        <i class="bi bi-person-plus text-info"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="mb-1">Client added to system</h6>
+                                        <small class="text-muted">Jan 15, 2023</small>
+                                    </div>
+                                    <p class="mb-0 text-muted">Initial client registration completed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons mt-4">
+            <a href="{{ path('app_client_pro_edit', {'id': client_pro.id}) }}" class="btn btn-primary">
+                <i class="bi bi-pencil me-2"></i>Edit Client
+            </a>
+            <a href="{{ path('app_client_pro_index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to List
+            </a>
+            <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="bi bi-trash me-2"></i>Delete Client
+            </button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="deleteModalLabel"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>{{ client_pro.nomclient }}</strong>? This action cannot be undone.</p>
+                    <p class="text-muted">All associated data will be permanently removed from the system.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    {{ include('client_pro/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}

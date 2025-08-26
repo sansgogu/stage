@@ -1,0 +1,258 @@
+{% extends "baseadmin.html.twig" %}
+
+
+{% block body %}
+    
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Client - ClientPro</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #6f42c1;
+            --light-bg: #f8f9fc;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-outline-secondary {
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .step-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .step-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e9ecef;
+            z-index: 1;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .step-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .step.active .step-text {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+        
+        .required-field::after {
+            content: '*';
+            color: #dc3545;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="page-header py-4 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="display-4 fw-bold"><i class="bi bi-people-fill me-3"></i>ClientPro</h1>
+                    <p class="lead">Professional Client Management System</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="{{ path('app_client_pro_index') }}" class="btn btn-light">
+                        <i class="bi bi-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header py-3">
+                        <h5 class="card-title mb-0"><i class="bi bi-person-plus me-2"></i>Create New Client</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Step Progress -->
+                        <div class="step-progress mb-5">
+                            <div class="step active">
+                                <div class="step-number">1</div>
+                                <div class="step-text">Basic Info</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-text">Contact Details</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-text">Additional Info</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-text">Review</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form -->
+                        {{ include('client_pro/_form.html.twig') }}
+                        
+                        <!-- Help Text -->
+                        <div class="mt-4">
+                            <div class="alert alert-info">
+                                <h6><i class="bi bi-info-circle me-2"></i>Need help?</h6>
+                                <p class="mb-0">Ensure all required fields (marked with *) are filled out correctly. For assistance, contact our support team.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2023 ClientPro. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-decoration-none text-muted me-3">Privacy Policy</a>
+                    <a href="#" class="text-decoration-none text-muted me-3">Terms of Service</a>
+                    <a href="#" class="text-decoration-none text-muted">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Form Enhancement Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add required field indicators
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                if (label.textContent.includes('Nomclient') || 
+                    label.textContent.includes('Matriculefiscale') ||
+                    label.textContent.includes('Tlfn')) {
+                    label.classList.add('required-field');
+                }
+            });
+            
+            // Enhance form controls with Bootstrap styling
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (!input.classList.contains('btn')) {
+                    input.classList.add('form-control');
+                }
+            });
+            
+            // Style the submit button
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.classList.add('btn', 'btn-primary', 'me-2');
+                submitButton.innerHTML = '<i class="bi bi-check-circle me-2"></i>Create Client';
+            }
+            
+            // Style the back link as a button
+            const backLink = document.querySelector('a[href*="app_client_pro_index"]');
+            if (backLink && !backLink.classList.contains('btn')) {
+                backLink.classList.add('btn', 'btn-outline-secondary');
+                backLink.innerHTML = '<i class="bi bi-arrow-left me-2"></i>Back to List';
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
