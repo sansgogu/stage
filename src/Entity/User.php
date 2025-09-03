@@ -23,7 +23,7 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255)] 
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
@@ -39,9 +39,7 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $is_verified = null;
 
- 
 
- 
     public function getId(): ?int
     {
         return $this->id;
@@ -142,8 +140,10 @@ class User implements PasswordAuthenticatedUserInterface
 
         return $this;
     }
- 
 
 
+        }
 
-}
+    
+
+

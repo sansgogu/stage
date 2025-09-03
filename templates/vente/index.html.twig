@@ -1,0 +1,164 @@
+{% extends "baseadmin.html.twig" %}
+{% block body %}
+<div class="container-fluid py-4">
+
+    <h4>Ajouter une nouvelle vente</h4>
+    <form id="venteForm">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Date de vente</label>
+                <input type="datetime-local" class="form-control" id="venteDate" required>
+            </div>
+            <div class="col-md-6">
+                <label>Client</label>
+                <select class="form-select" id="venteClient" required>
+                    <option value="">Sélectionnez un Client</option>
+                    {% for client in clients %}
+                        <option value="{{ client.nomclient }}">{{ client.nomclient }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <table class="table table-bordered" id="venteTable">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix Unitaire</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select class="form-select produitSelect" required>
+                            <option value="">Sélectionnez un produit</option>
+                            {% for produit in produits %}
+                                <option value="{{ produit.titre }}" data-prix="{{ produit.prix }}">
+                                    {{ produit.titre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="number" class="form-control quantiteInput" required min="1"></td>
+                    <td>
+                        <input type="number" step="0.01" class="form-control prixInput" required readonly>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm deleteRow"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-success mb-3" id="addRow"><i class="fas fa-plus"></i> Ajouter une ligne</button>
+        <button type="submit" class="btn btn-primary mb-3">Enregistrer la vente</button>
+    </form>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Fonction pour mettre à jour le prix quand un produit est sélectionné
+    function updatePrix(selectElement) {
+        var selectedOption = selectElement.find('option:selected');
+        var prix = selectedOption.data('prix');
+        
+        var row = selectElement.closest('tr');
+        
+        // Mettre à jour le champ prix
+        if (prix) {
+            row.find('.prixInput').val(prix);
+        } else {
+            row.find('.prixInput').val('');
+        }
+    }
+
+    // Événement pour la sélection de produit
+    $('#venteTable').on('change', '.produitSelect', function() {
+        updatePrix($(this));
+    });
+
+    // Ajouter une nouvelle ligne
+    $('#addRow').click(function() {
+        var newRow = `<tr>
+            <td>
+                <select class="form-select produitSelect" required>
+                    <option value="">Sélectionnez un produit</option>
+                    {% for produit in produits %}
+                        <option value="{{ produit.titre }}" data-prix="{{ produit.prix }}">
+                            {{ produit.titre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="number" class="form-control quantiteInput" required min="1"></td>
+            <td>
+                <input type="number" step="0.01" class="form-control prixInput" required readonly>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm deleteRow"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`;
+        $('#venteTable tbody').append(newRow);
+    });
+
+    // Supprimer une ligne
+    $('#venteTable').on('click', '.deleteRow', function() {
+        $(this).closest('tr').remove();
+    });
+
+    // Soumission du formulaire
+    $('#venteForm').submit(function(e) {
+        e.preventDefault();
+        var venteData = [];
+        var isValid = true;
+        
+        $('#venteTable tbody tr').each(function() {
+            var produit = $(this).find('.produitSelect').val();
+            var quantite = $(this).find('.quantiteInput').val();
+            var prix = $(this).find('.prixInput').val();
+            
+            if (!produit || !quantite || !prix) {
+                alert('Veuillez remplir tous les champs pour chaque produit');
+                isValid = false;
+                return false;
+            }
+            
+            venteData.push({
+                produit: produit, 
+                quantite: quantite, 
+                prix: prix
+            });
+        });
+        
+        if (!isValid) return;
+        
+        console.log('Données de la vente:', venteData);
+        alert('La vente a été enregistrée ! (voir console pour les données)');
+        
+        // Ici vous pouvez ajouter l'appel AJAX pour enregistrer en base de données
+        /*
+        $.ajax({
+            url: '/vente/ajouter',
+            method: 'POST',
+            data: {
+                date_vente: $('#venteDate').val(),
+                client: $('#venteClient').val(),
+                produits: venteData
+            },
+            success: function(response) {
+                alert('Vente enregistrée avec succès!');
+                // Réinitialiser le formulaire ou rediriger
+            },
+            error: function() {
+                alert('Erreur lors de l\'enregistrement');
+            }
+        });
+        */
+    });
+});
+</script>
+{% endblock %}

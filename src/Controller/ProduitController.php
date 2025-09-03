@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Produit;
 use App\Form\Produit1Type;
 use App\Repository\ProduitRepository;
@@ -15,13 +14,25 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProduitController extends AbstractController
 {
     #[Route(name: 'app_produit_index', methods: ['GET'])]
-    public function index(ProduitRepository $produitRepository): Response
+ 
+     public function index(ProduitRepository $produitRepository, Request $request): Response
     {
+        // Récupération de la valeur de recherche depuis l'URL
+        $search = $request->query->get('recherche');
+        
+        if ($search) {
+            // Recherche dans tous les attributs des produits
+            $produits = $produitRepository->rechercheTousAttributs($search);
+        } else {
+            // Récupère tous les produits si aucune recherche
+            $produits = $produitRepository->findAll();
+        }
+
         return $this->render('produit/index.html.twig', [
-            'produits' => $produitRepository->findAll(),
+            'produits' => $produits,
+            'search' => $search, // Passe la valeur de recherche à la vue
         ]);
     }
-
     #[Route('/new', name: 'app_produit_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

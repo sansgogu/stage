@@ -22,8 +22,7 @@ class Stock
     #[ORM\Column]
     private ?int $telephone = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Produit $produit = null;
+   
 
     public function getId(): ?int
     {
@@ -66,15 +65,6 @@ class Stock
         return $this;
     }
 
-    public function getProduit(): ?Produit
-    {
-        return $this->produit;
+   
     }
 
-    public function setProduit(?Produit $produit): static
-    {
-        $this->produit = $produit;
-
-        return $this;
-    }
-}

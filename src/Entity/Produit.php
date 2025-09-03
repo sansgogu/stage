@@ -31,12 +31,7 @@ class Produit
     #[ORM\ManyToOne(inversedBy: 'produit')]
     private ?Categorie $categorie = null;
 
-    /**
-     * @var Collection<int, lignefacture>
-     */
-    #[ORM\OneToMany(targetEntity: Lignefacture::class, mappedBy: 'produit')]
-    private Collection $lignefacture;
-
+   
     #[ORM\ManyToOne(inversedBy: 'produit')]
     private ?Fournisseur $fournisseur = null;
 
@@ -52,11 +47,7 @@ class Produit
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $createdat = null;
 
-    public function __construct()
-    {
-        $this->lignefacture = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-    }
+   
 
     public function getId(): ?int
     {
@@ -123,36 +114,7 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, lignefacture>
-     */
-    public function getLignefacture(): Collection
-    {
-        return $this->lignefacture;
-    }
-
-    public function addLignefacture(Lignefacture $lignefacture): static
-    {
-        if (!$this->lignefacture->contains($lignefacture)) {
-            $this->lignefacture->add($lignefacture);
-            $lignefacture->setProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLignefacture(Lignefacture $lignefacture): static
-    {
-        if ($this->lignefacture->removeElement($lignefacture)) {
-            // set the owning side to null (unless already changed)
-            if ($lignefacture->getProduit() === $this) {
-                $lignefacture->setProduit(null);
-            }
-        }
-
-        return $this;
-    }
-
+    
     public function getFournisseur(): ?Fournisseur
     {
         return $this->fournisseur;

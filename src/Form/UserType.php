@@ -1,54 +1,43 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class)
-            ->add('nom')
-            ->add('prenom')
-            ->add('bio', TextareaType::class, [
-                'required' => false,
+            ->add('prenom', TextType::class, [
+                'label' => 'Prénom',
             ])
-            ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'User' => 'ROLE_USER',
-                    'Admin' => 'ROLE_ADMIN',
-                    // Add other roles as needed
+            ->add('nom', TextType::class, [
+                'label' => 'Nom',
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Email',
+            ])
+            ->add('is_verified', ChoiceType::class, [
+                'label'    => 'Vérifié',
+                'choices'  => [
+                    'Oui' => true,
+                    'Non' => false,
                 ],
-                'multiple' => true,
-                'expanded' => true, // renders as checkboxes
-            ])
-            ->add('password', PasswordType::class, [
-                // Often you'll want to handle password separately
-                'required' => $options['is_new_user'], // example conditional requirement
-            ])
-            ->add('is_verified', CheckboxType::class, [
-                'required' => false,
-            ])
-        ;
+                'expanded' => true, // radio buttons
+                'multiple' => false, // choix unique
+            ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'is_new_user' => false, // custom option example
         ]);
-        
-        $resolver->setAllowedTypes('is_new_user', 'bool');
     }
 }

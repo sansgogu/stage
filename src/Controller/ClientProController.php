@@ -18,7 +18,7 @@ final class ClientProController extends AbstractController
     public function index(ClientProRepository $clientProRepository): Response
     {
         return $this->render('client_pro/index.html.twig', [
-            'client_pros' => $clientProRepository->findAll(),
+            'client_pro' => $clientProRepository->findAll(),
         ]);
     }
 

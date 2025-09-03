@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New Achat</title>
+
+{% block body %}
+    <h1>Create new Achat</h1>
+
+    {{ include('achat/_form.html.twig') }}
+
+    <a href="{{ path('app_achat_index') }}">back to list</a>
+{% endblock %}

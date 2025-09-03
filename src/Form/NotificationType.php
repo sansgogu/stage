@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Facture;
+use App\Entity\Produit;
 use App\Entity\Notification;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -15,7 +15,8 @@ class NotificationType extends AbstractType
     {
         $builder
             ->add('produit', EntityType::class, [
-                'class' => Facture::class,
+                 'class' => Produit::class, 
+              
                 'choice_label' => 'id',
             ])
         ;

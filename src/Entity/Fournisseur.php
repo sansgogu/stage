@@ -2,68 +2,69 @@
 
 namespace App\Entity;
 
-use App\Repository\FournisseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Produit;
 
-#[ORM\Entity(repositoryClass: FournisseurRepository::class)]
+#[ORM\Entity]
 class Fournisseur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nomclient = null;
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $matriculefiscale = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $adresse = null;
 
-    #[ORM\Column]
-    private ?int $tlfn = null;
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    private ?string $tlfn = null;
 
-    /**
-     * @var Collection<int, Produit>
-     */
-    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'fournisseur')]
-    private Collection $produit;
+    #[ORM\OneToMany(mappedBy: 'fournisseur', targetEntity: Produit::class, orphanRemoval: true, cascade: ['remove'])]
+    private Collection $produits;
 
     public function __construct()
     {
-        $this->produit = new ArrayCollection();
+        $this->produits = new ArrayCollection();
     }
+
+    // ----- Getters / Setters -----
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNomclient(): ?string
+    public function getNom(): ?string
     {
-        return $this->nomclient;
+        return $this->nom;
     }
 
-    public function setNomclient(string $nomclient): static
+    public function setNom(string $nom): self
     {
-        $this->nomclient = $nomclient;
-
+        $this->nom = $nom;
         return $this;
     }
+
+   
 
     public function getMatriculefiscale(): ?string
     {
         return $this->matriculefiscale;
     }
 
-    public function setMatriculefiscale(string $matriculefiscale): static
+    public function setMatriculefiscale(?string $matriculefiscale): self
     {
         $this->matriculefiscale = $matriculefiscale;
-
         return $this;
     }
 
@@ -72,56 +73,51 @@ class Fournisseur
         return $this->adresse;
     }
 
-    public function setAdresse(string $adresse): static
+    public function setAdresse(?string $adresse): self
     {
         $this->adresse = $adresse;
-
         return $this;
     }
 
-    public function getTlfn(): ?int
+    public function getTlfn(): ?string
     {
         return $this->tlfn;
     }
 
-    public function setTlfn(int $tlfn): static
+    public function setTlfn(?string $tlfn): self
     {
         $this->tlfn = $tlfn;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, produit>
-     */
-    public function getProduit(): Collection
+    /** @return Collection<int, Produit> */
+    public function getProduits(): Collection
     {
-        return $this->produit;
+        return $this->produits;
     }
 
-    public function addProduit(Produit $produit): static
+    public function addProduit(Produit $produit): self
     {
-        if (!$this->produit->contains($produit)) {
-            $this->produit->add($produit);
+        if (!$this->produits->contains($produit)) {
+            $this->produits[] = $produit;
             $produit->setFournisseur($this);
         }
-
         return $this;
     }
 
-    public function removeProduit(Produit $produit): static
+    public function removeProduit(Produit $produit): self
     {
-        if ($this->produit->removeElement($produit)) {
-            // set the owning side to null (unless already changed)
+        if ($this->produits->removeElement($produit)) {
             if ($produit->getFournisseur() === $this) {
                 $produit->setFournisseur(null);
             }
         }
-
         return $this;
     }
-    public function __toString()
+
+    // ----- Méthode pratique pour Twig -----
+    public function __toString(): string
     {
-        return  $this->nomclient . ' - ' . $this->matriculefiscale . ' - ' . $this->adresse . ' - ' . $this->tlfn;
+        return $this->nom ?? '';
     }
 }
